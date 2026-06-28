@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="icon.png" alt="Overlay AI" width="120">
+
 # Overlay AI
 
 **どのアプリの上にも浮かべて使える、Android 用フローティング AI チャット**
