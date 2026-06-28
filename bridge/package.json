@@ -1,0 +1,11 @@
+{
+  "name": "codex-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "codex-bridge": "./codex-bridge.mjs" },
+  "scripts": {
+    "start": "node codex-bridge.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

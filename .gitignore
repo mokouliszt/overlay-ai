@@ -1,0 +1,22 @@
+# Gradle / Android
+.gradle/
+/build
+/app/build
+/local.properties
+/.idea/
+*.iml
+/captures
+.cxx/
+.DS_Store
+
+# Node / WebUI（生成物はCIで再ビルド）
+node_modules/
+/app/src/main/assets/webui/
+
+# 秘密情報は絶対にコミットしない
+**/auth.json
+
+# 署名（絶対にコミットしない）
+keystore.properties
+*.jks
+*.keystore
