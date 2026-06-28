@@ -30,14 +30,6 @@ ChatGPT のサブスク枠（Codex OAuth）をそのまま使い、API キー不
 - **スキル機構** — Claude / Codex と同じ `SKILL.md` 形式に対応。zip でスキルを追加すると、モデルが必要に応じて読み込み・実行します。Progressive disclosure 方式でメタデータのみ常時注入。
 - **完全オンデバイス** — 中継サーバやブリッジ用 PC は不要。ログイン情報は `EncryptedSharedPreferences` に暗号化保存。DNS は DoH（Cloudflare）フォールバック付き。
 
-## スクリーンショット
-
-| ダッシュボード | フローティングパネル |
-| :---: | :---: |
-| <img src="docs/screenshot_dashboard.png" width="240"> | <img src="docs/screenshot_overlay.png" width="240"> |
-
-> `docs/` 配下に画像を配置してください（プレースホルダ）。
-
 ## 仕組み
 
 ```
