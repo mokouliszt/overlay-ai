@@ -38,7 +38,7 @@ const INSTRUCTIONS =
   "When the user attaches a screenshot, answer about what is visible on it.";
 
 const MODELS = (process.env.MODELS ||
-  "gpt-5.5,gpt-5.4,gpt-5.3-codex,gpt-5-codex-mini,o3")
+  "gpt-5.6-sol,gpt-5.6-terra,gpt-5.6-luna,gpt-5.5,gpt-5.4,gpt-5.3-codex,gpt-5-codex-mini,o3")
   .split(",").map(s => s.trim()).filter(Boolean);
 
 // ---------- auth.json ----------

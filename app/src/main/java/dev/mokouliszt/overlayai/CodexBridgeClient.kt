@@ -37,6 +37,9 @@ class CodexBridgeClient(
 
     // ブリッジの /models と揃える。起動後に GET /models で動的取得してもよい。
     override fun availableModels(): List<String> = listOf(
+        "gpt-5.6-sol",
+        "gpt-5.6-terra",
+        "gpt-5.6-luna",
         "gpt-5.5",
         "gpt-5.4",
         "gpt-5.3-codex",

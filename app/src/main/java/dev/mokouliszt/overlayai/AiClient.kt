@@ -38,10 +38,12 @@ data class ChatMessage(
 
 enum class Role { USER, ASSISTANT, SYSTEM }
 
-/** Codex backend の reasoning.effort に対応。 */
+/** Codex backend の reasoning.effort に対応。xhigh/max は GPT-5.6 系のみ（UI 側で制限）。 */
 enum class ReasoningEffort(val wire: String, val label: String) {
     MINIMAL("minimal", "最小"),
     LOW("low", "低"),
     MEDIUM("medium", "中"),
-    HIGH("high", "高");
+    HIGH("high", "高"),
+    XHIGH("xhigh", "超高"),
+    MAX("max", "最大");
 }

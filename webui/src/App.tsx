@@ -14,6 +14,14 @@ const EFFORTS = [
   { wire: "high", label: "高" },
 ];
 
+// GPT-5.6 系のみで選択可能な追加 effort（none/low/medium/high/xhigh/max の上位2段）
+const EFFORTS_56 = [
+  { wire: "xhigh", label: "超高" },
+  { wire: "max", label: "最大" },
+];
+
+const supportsExtendedEffort = (model: string) => model.startsWith("gpt-5.6");
+
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -92,7 +100,16 @@ export default function App() {
 
       {/* モデル / 推論レベル / 画面添付 */}
       <div className="flex items-center gap-1.5">
-        <Select value={model} onValueChange={setModel}>
+        <Select
+          value={model}
+          onValueChange={(m) => {
+            setModel(m);
+            // xhigh/max 選択中に 5.6 以外へ切り替えたら high へフォールバック
+            if (!supportsExtendedEffort(m) && EFFORTS_56.some((e) => e.wire === effort)) {
+              setEffort("high");
+            }
+          }}
+        >
           <SelectTrigger className="flex-1"><SelectValue placeholder="model" /></SelectTrigger>
           <SelectContent>
             {models.map((m) => <SelectItem key={m} value={m}>{m}</SelectItem>)}
@@ -101,7 +118,8 @@ export default function App() {
         <Select value={effort} onValueChange={setEffort}>
           <SelectTrigger className="w-[88px]"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {EFFORTS.map((e) => <SelectItem key={e.wire} value={e.wire}>推論:{e.label}</SelectItem>)}
+            {(supportsExtendedEffort(model) ? [...EFFORTS, ...EFFORTS_56] : EFFORTS)
+              .map((e) => <SelectItem key={e.wire} value={e.wire}>推論:{e.label}</SelectItem>)}
           </SelectContent>
         </Select>
         <Button

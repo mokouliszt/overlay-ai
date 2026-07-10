@@ -57,7 +57,10 @@ class DirectCodexClient(
     )
 
     override fun availableModels(): List<String> =
-        listOf("gpt-5.5", "gpt-5.4", "gpt-5.3-codex", "gpt-5-codex-mini", "o3")
+        listOf(
+            "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna",
+            "gpt-5.5", "gpt-5.4", "gpt-5.3-codex", "gpt-5-codex-mini", "o3",
+        )
 
     private class ShellCall(val callId: String, val command: String)
     private class Turn(val items: List<JSONObject>, val shellCalls: List<ShellCall>, val toolLevel: Int)
@@ -223,6 +226,10 @@ class DirectCodexClient(
     private fun webSearchTool(): JSONObject = JSONObject().put("type", "web_search")
 
     private fun buildBody(input: JSONArray, model: String, effort: ReasoningEffort, toolLevel: Int): JSONObject {
+        // xhigh/max は GPT-5.6 系のみサポート。UI で制限しているが、万一渡されたら high へ丸める
+        val safeEffort =
+            if (effort >= ReasoningEffort.XHIGH && !model.startsWith("gpt-5.6")) ReasoningEffort.HIGH
+            else effort
         val tools = JSONArray()
         if (toolLevel >= 2) tools.put(shellTool())          // 最初に外す候補
         if (toolLevel >= 1 && webSearch) tools.put(webSearchTool())
@@ -239,7 +246,7 @@ class DirectCodexClient(
             put("include", JSONArray().put("reasoning.encrypted_content"))
             put("store", false)
             put("stream", true)
-            put("reasoning", JSONObject().put("effort", effort.wire))
+            put("reasoning", JSONObject().put("effort", safeEffort.wire))
         }
     }
 }
