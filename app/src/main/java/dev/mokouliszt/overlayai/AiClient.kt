@@ -38,7 +38,10 @@ data class ChatMessage(
 
 enum class Role { USER, ASSISTANT, SYSTEM }
 
-/** Codex backend の reasoning.effort に対応。xhigh/max は GPT-5.6 系のみ（UI 側で制限）。 */
+/**
+ * Codex backend の reasoning.effort に対応。
+ * xhigh/max は GPT-5.6 / GPT-6 系のみ、minimal はそれ以前のモデルのみ（UI 側で制限）。
+ */
 enum class ReasoningEffort(val wire: String, val label: String) {
     MINIMAL("minimal", "最小"),
     LOW("low", "低"),
@@ -46,4 +49,21 @@ enum class ReasoningEffort(val wire: String, val label: String) {
     HIGH("high", "高"),
     XHIGH("xhigh", "超高"),
     MAX("max", "最大");
+}
+
+/**
+ * GPT-5.6 / GPT-6 系か。Codex のモデルカタログ上、これらは low〜max に対応し minimal は非対応。
+ * （ultra はクライアント側の段階で、wire には max として送られるため扱わない）
+ */
+fun supportsExtendedEffort(model: String): Boolean =
+    model.startsWith("gpt-5.6") || model.startsWith("gpt-6")
+
+/** モデルが受け付けない effort を最寄りの対応段へ丸める（UI をすり抜けた場合の防御）。 */
+fun ReasoningEffort.clampFor(model: String): ReasoningEffort {
+    val extended = supportsExtendedEffort(model)
+    return when {
+        extended && this == ReasoningEffort.MINIMAL -> ReasoningEffort.LOW
+        !extended && this >= ReasoningEffort.XHIGH -> ReasoningEffort.HIGH
+        else -> this
+    }
 }

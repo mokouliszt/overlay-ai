@@ -38,7 +38,7 @@ const INSTRUCTIONS =
   "When the user attaches a screenshot, answer about what is visible on it.";
 
 const MODELS = (process.env.MODELS ||
-  "gpt-5.6-sol,gpt-5.6-terra,gpt-5.6-luna,gpt-5.5,gpt-5.4,gpt-5.3-codex,gpt-5-codex-mini,o3")
+  "gpt-6-sol,gpt-6-astra,gpt-6-luna,gpt-5.6-sol,gpt-5.6-terra,gpt-5.6-luna,gpt-5.5,gpt-5.4,gpt-5.3-codex,gpt-5-codex-mini,o3")
   .split(",").map(s => s.trim()).filter(Boolean);
 
 // ---------- auth.json ----------
@@ -113,6 +113,15 @@ async function freshAuth() {
 
 // ---------- Responses 組み立て ----------
 
+// GPT-5.6 / GPT-6 系: low〜max（minimal 非対応）。それ以前: minimal〜high。
+const supportsExtendedEffort = (model) => /^gpt-(5\.6|6)/.test(model || "");
+function clampEffort(model, effort) {
+  const ext = supportsExtendedEffort(model);
+  if (ext && effort === "minimal") return "low";
+  if (!ext && (effort === "xhigh" || effort === "max")) return "high";
+  return effort;
+}
+
 function buildBody({ model, effort, messages }) {
   const input = messages.map(m => {
     const role = (m.role || "user").toLowerCase();
@@ -130,7 +139,7 @@ function buildBody({ model, effort, messages }) {
     store: false,
     stream: true,
   };
-  if (effort) body.reasoning = { effort }; // minimal|low|medium|high
+  if (effort) body.reasoning = { effort: clampEffort(body.model, effort) };
   return body;
 }
 

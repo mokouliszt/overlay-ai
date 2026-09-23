@@ -13,10 +13,10 @@
 node_modules/
 /app/src/main/assets/webui/
 
-# 秘密情報は絶対にコミットしない
+# 秘密情報
 **/auth.json
 
-# 署名（絶対にコミットしない）
+# 署名
 keystore.properties
 *.jks
 *.keystore

@@ -14,13 +14,20 @@ const EFFORTS = [
   { wire: "high", label: "高" },
 ];
 
-// GPT-5.6 系のみで選択可能な追加 effort（none/low/medium/high/xhigh/max の上位2段）
-const EFFORTS_56 = [
+// GPT-5.6 / GPT-6 系のみで選択可能な追加 effort（low/medium/high/xhigh/max の上位2段）
+const EFFORTS_EXT = [
   { wire: "xhigh", label: "超高" },
   { wire: "max", label: "最大" },
 ];
 
-const supportsExtendedEffort = (model: string) => model.startsWith("gpt-5.6");
+// GPT-5.6 / GPT-6 系は xhigh/max に対応し、minimal は非対応（Codex モデルカタログ準拠）
+const supportsExtendedEffort = (model: string) =>
+  model.startsWith("gpt-5.6") || model.startsWith("gpt-6");
+
+const effortsFor = (model: string) =>
+  supportsExtendedEffort(model)
+    ? [...EFFORTS.filter((e) => e.wire !== "minimal"), ...EFFORTS_EXT]
+    : EFFORTS;
 
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -104,9 +111,11 @@ export default function App() {
           value={model}
           onValueChange={(m) => {
             setModel(m);
-            // xhigh/max 選択中に 5.6 以外へ切り替えたら high へフォールバック
-            if (!supportsExtendedEffort(m) && EFFORTS_56.some((e) => e.wire === effort)) {
+            // 切替先が非対応の effort を選択中なら最寄りの段へフォールバック
+            if (!supportsExtendedEffort(m) && EFFORTS_EXT.some((e) => e.wire === effort)) {
               setEffort("high");
+            } else if (supportsExtendedEffort(m) && effort === "minimal") {
+              setEffort("low");
             }
           }}
         >
@@ -118,7 +127,7 @@ export default function App() {
         <Select value={effort} onValueChange={setEffort}>
           <SelectTrigger className="w-[88px]"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {(supportsExtendedEffort(model) ? [...EFFORTS, ...EFFORTS_56] : EFFORTS)
+            {effortsFor(model)
               .map((e) => <SelectItem key={e.wire} value={e.wire}>推論:{e.label}</SelectItem>)}
           </SelectContent>
         </Select>

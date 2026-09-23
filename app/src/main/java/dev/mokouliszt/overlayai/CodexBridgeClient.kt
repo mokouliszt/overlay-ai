@@ -37,6 +37,9 @@ class CodexBridgeClient(
 
     // ブリッジの /models と揃える。起動後に GET /models で動的取得してもよい。
     override fun availableModels(): List<String> = listOf(
+        "gpt-6-sol",
+        "gpt-6-astra",
+        "gpt-6-luna",
         "gpt-5.6-sol",
         "gpt-5.6-terra",
         "gpt-5.6-luna",
@@ -55,7 +58,7 @@ class CodexBridgeClient(
     ): Flow<String> = flow {
         val payload = JSONObject().apply {
             put("model", model)
-            put("effort", effort.wire)
+            put("effort", effort.clampFor(model).wire)
             put("messages", JSONArray().apply {
                 messages.forEachIndexed { i, m ->
                     put(JSONObject().apply {

@@ -139,7 +139,7 @@ description: 何をするスキルか / どんなときに使うかのトリガ�
 ## 設定
 
 - **ワークスペースのリセット** — 起動ごとに作業領域を初期化するか選択できます。
-- **モデル** — `gpt-5.5` / `gpt-5.4` / `gpt-5.3-codex` / `gpt-5-codex-mini` / `o3` などから選択可能（利用枠はアカウントの契約に依存）。
+- **モデル** — `gpt-6-sol` / `gpt-6-astra` / `gpt-6-luna` / `gpt-5.6-sol` / `gpt-5.5` / `gpt-5.4` / `gpt-5.3-codex` / `gpt-5-codex-mini` / `o3` などから選択可能（利用枠はアカウントの契約に依存）。
 
 ## プライバシー / セキュリティ
 
@@ -155,7 +155,3 @@ description: 何をするスキルか / どんなときに使うかのトリガ�
 
 [MIT License](LICENSE) © 2026 mokouliszt
 
-## 作者
-
-- GitHub: [@mokouliszt](https://github.com/mokouliszt)
-- 開発を応援していただける方は [Ko-fi](https://ko-fi.com/mokouliszt) へ ☕
